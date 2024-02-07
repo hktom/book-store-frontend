@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
 import { Box } from "@mui/material";
+import UserProvider from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,8 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className} suppressHydrationWarning={true}>
-        <Header />
-        <Box sx={{ maxWidth: "90rem", mx: "auto", mt: 4 }}>{children}</Box>
+        <UserProvider>
+          <Header />
+          <Box sx={{ maxWidth: "90rem", mx: "auto", mt: 4 }}>{children}</Box>
+        </UserProvider>
       </body>
     </html>
   );
