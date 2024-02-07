@@ -1,7 +1,11 @@
+"use client";
+
 import { IBook } from "@/helpers/interfaces";
 import { Box, CardMedia, Typography } from "@mui/material";
+import { useRouter } from 'next/navigation';
 
-function BookCard({ title, cover, tags, writer, point }: IBook) {
+function BookCard({ title, cover, tags, writer, point, id }: IBook) {
+  const router = useRouter();
   return (
     <Box
       sx={{
@@ -16,6 +20,7 @@ function BookCard({ title, cover, tags, writer, point }: IBook) {
           boxShadow: "0px 0px 10px 1px #ccc",
         },
       }}
+      onClick={() => router.push(`/book/${id}`)}
     >
       <CardMedia
         component="img"
