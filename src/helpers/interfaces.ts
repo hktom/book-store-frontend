@@ -32,4 +32,5 @@ export interface IUser {
   email: string;
   password: string;
   orders: IOrder[];
+  points: number;
 }

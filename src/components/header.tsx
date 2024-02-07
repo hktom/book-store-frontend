@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
@@ -14,9 +14,12 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { UserContext } from "@/app/providers";
+import { useContext, useEffect } from "react";
+import Cookies from "js-cookie";
 
 const pages = ["Home"];
-const settings = ["Profile", "Cart", "Order", "Logout"];
+const settings = ["Cart", "Order", "Logout"];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -39,6 +42,45 @@ function Header() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const { user, fetchUser } = useContext(UserContext);
+
+  const DisplayUser = () => {
+    if (user) {
+      return (
+        <Box sx={{ flexGrow: 0 }}>
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            sx={{
+              mr: 2,
+
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            {user.firstName} {user.lastName} {user.points}
+          </Typography>
+        </Box>
+      );
+    }
+    return <></>;
+  };
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (!user && token) {
+      fetchUser(token);
+    }
+  }, [fetchUser, user]);
+
+  const getMenu = (pages: string[], settings: string[]): string[] => {
+    if (user) {
+      return pages.concat(settings);
+    }
+    return pages;
   };
 
   return (
@@ -93,7 +135,7 @@ function Header() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
+              {getMenu(pages, settings).map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
@@ -120,7 +162,7 @@ function Header() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {getMenu(pages, settings).map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -130,36 +172,7 @@ function Header() {
               </Button>
             ))}
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          <DisplayUser />
         </Toolbar>
       </Container>
     </AppBar>

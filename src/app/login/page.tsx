@@ -5,7 +5,8 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import Cookies from "js-cookie";
-import { IUserContext, UserContext } from "../providers";
+import { useRouter } from "next/navigation";
+import { UserContext } from "../providers";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { user, fetchUser } = useContext(UserContext);
+  const router = useRouter();
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -20,11 +22,13 @@ function Login() {
     const token = await autLogin({ email, password });
     if (token) {
       Cookies.set("token", token);
-      fetchUser(token);
+      await fetchUser(token);
+      setLoading((prev) => !prev);
+      router.push("/");
     } else {
+      setLoading((prev) => !prev);
       setError("login failed");
     }
-    setLoading((prev) => !prev);
   };
 
   return (

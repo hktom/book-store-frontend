@@ -2,7 +2,7 @@
 
 import { getMe } from "@/helpers/auth";
 import { IUser } from "@/helpers/interfaces";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 export interface IUserContext {
   user: IUser | null;
@@ -11,7 +11,7 @@ export interface IUserContext {
 
 export const UserContext = createContext<IUserContext>({
   user: null,
-  fetchUser: () => {},
+  fetchUser: async () => {},
 });
 
 interface IUserProviderProps {
