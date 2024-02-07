@@ -1,30 +1,10 @@
 "use client";
 
+import { filterBooks, getBooks } from "@/helpers/fetchBooks";
 import { IBook } from "@/helpers/interfaces";
 import { Box, CardMedia, Grid, Typography } from "@mui/material";
-import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
-
-const getBooks = async (page: number): Promise<IBook[]> => {
-  try {
-    const { data } = await axios.get(
-      `http://localhost:3000/books?page=${page}`
-    );
-
-    return data as IBook[];
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
-const filterBooks = (prevBooks: IBook[], newBooks: IBook[]) => {
-  const books = newBooks.filter((newBook) => {
-    return !prevBooks.some((prevBook) => prevBook.id === newBook.id);
-  });
-
-  return [...prevBooks, ...books];
-};
+import BookCard from "./bookCard";
 
 function BookList() {
   const [books, setBooks] = useState<IBook[]>([]);
@@ -32,17 +12,18 @@ function BookList() {
   const [loading, setLoading] = useState<boolean>(false);
   const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
 
-  useEffect(() => {
-    async function fetchBooks(page: number) {
+  async function fetchBooks(page: number) {
+    setLoading((prevLoading) => !prevLoading);
+    const newBooks = await getBooks(page);
+    if (newBooks.length > 0) {
+      setBooks((prevBooks) => filterBooks(prevBooks, newBooks));
       setLoading((prevLoading) => !prevLoading);
-      const newBooks = await getBooks(page);
-      if (newBooks.length > 0) {
-        setBooks((prevBooks) => filterBooks(prevBooks, newBooks));
-        setLoading((prevLoading) => !prevLoading);
-      } else {
-        setHasReachedEnd(true);
-      }
+    } else {
+      setHasReachedEnd(true);
     }
+  }
+
+  useEffect(() => {
     fetchBooks(page);
   }, [page]);
 
@@ -76,31 +57,7 @@ function BookList() {
       <Grid container spacing={2}>
         {books.map((book) => (
           <Grid item xs={12} md={3} key={book.id}>
-            <Box
-              sx={{
-                p: 1,
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <CardMedia
-                component="img"
-                image={book.cover}
-                alt={book.title}
-                sx={{ height: "300px", width: "100%", objectFit: "cover" }}
-              />
-              <Box sx={{ mt: 2 }}>
-                <Typography
-                  variant="body1"
-                  component="h3"
-                  sx={{ textAlign: "center" }}
-                >
-                  {book.title}
-                </Typography>
-              </Box>
-            </Box>
+            <BookCard {...book} />
           </Grid>
         ))}
       </Grid>
