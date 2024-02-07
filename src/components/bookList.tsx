@@ -10,6 +10,7 @@ const getBooks = async (page: number): Promise<IBook[]> => {
     const { data } = await axios.get(
       `http://localhost:3000/books?page=${page}`
     );
+
     return data as IBook[];
   } catch (error) {
     console.error(error);
@@ -17,25 +18,58 @@ const getBooks = async (page: number): Promise<IBook[]> => {
   }
 };
 
+const filterBooks = (prevBooks: IBook[], newBooks: IBook[]) => {
+  const books = newBooks.filter((newBook) => {
+    return !prevBooks.some((prevBook) => prevBook.id === newBook.id);
+  });
+
+  return [...prevBooks, ...books];
+};
+
 function BookList() {
   const [books, setBooks] = useState<IBook[]>([]);
   const [page, setPage] = useState<number>(1);
-
-  const filterBooks = (prevBooks: IBook[], newBooks: IBook[]) => {
-    const books = newBooks.filter((newBook) => {
-      return !prevBooks.some((prevBook) => prevBook.id === newBook.id);
-    });
-
-    return [...prevBooks, ...books];
-  };
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchBooks(page: number) {
+      setLoading((prevLoading) => !prevLoading);
       const newBooks = await getBooks(page);
-      setBooks((prevBooks) => filterBooks(prevBooks, newBooks));
+      if (newBooks.length > 0) {
+        setBooks((prevBooks) => filterBooks(prevBooks, newBooks));
+        setLoading((prevLoading) => !prevLoading);
+      } else {
+        setHasReachedEnd(true);
+      }
     }
     fetchBooks(page);
   }, [page]);
+
+  const handleScroll = useCallback(() => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight * 0.8 &&
+      !loading
+    ) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
+  const bottomMessage = useMemo(() => {
+    if (hasReachedEnd) {
+      return "You have reached the end!";
+    } else if (loading) {
+      return "Loading...";
+    } else {
+      return "";
+    }
+  }, [hasReachedEnd, loading]);
 
   return (
     <Box sx={{ mt: 5 }}>
@@ -70,6 +104,10 @@ function BookList() {
           </Grid>
         ))}
       </Grid>
+
+      <Typography variant="h5" sx={{ my: 7 }}>
+        {bottomMessage}
+      </Typography>
     </Box>
   );
 }
