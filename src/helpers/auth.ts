@@ -3,7 +3,7 @@ import { IUser } from "./interfaces";
 
 export const getMe = async (token: string) => {
   try {
-    const { data } = await axios.get("http://localhost:3000/me", {
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -18,7 +18,7 @@ export const getMe = async (token: string) => {
 
 export const autLogin = async (user: Partial<IUser>) => {
   try {
-    const { data } = await axios.post("http://localhost:3000/login", {
+    const { data } = await axios.post(`${process.env.NEXT_PUBLIC_HOST}/login`, {
       ...user,
     });
 
@@ -31,7 +31,7 @@ export const autLogin = async (user: Partial<IUser>) => {
 
 export const autRegister = async (user: Partial<IUser>) => {
   try {
-    const { data } = await axios.post("http://localhost:3000/register", {
+    const { data } = await axios.post(`${process.env.NEXT_PUBLIC_HOST}/register`, {
       ...user,
     });
 

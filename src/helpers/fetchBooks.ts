@@ -3,9 +3,7 @@ import { IBook } from "./interfaces";
 
 export const getBooks = async (page: number): Promise<IBook[]> => {
   try {
-    const { data } = await axios.get(
-      `http://localhost:3000/books?page=${page}`
-    );
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/books?page=${page}`);
 
     return data as IBook[];
   } catch (error) {
@@ -16,9 +14,7 @@ export const getBooks = async (page: number): Promise<IBook[]> => {
 
 export const searchBook = async (title: string): Promise<IBook[]> => {
   try {
-    const { data } = await axios.get(
-      `http://localhost:3000/book?title=${title}`
-    );
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/book?title=${title}`);
 
     return data as IBook[];
   } catch (error) {
@@ -29,7 +25,7 @@ export const searchBook = async (title: string): Promise<IBook[]> => {
 
 export const getBook = async (id: string): Promise<IBook | null> => {
   try {
-    const { data } = await axios.get(`http://localhost:3000/book/${id}`);
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/book/${id}`);
 
     return data as IBook;
   } catch (error) {

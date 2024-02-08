@@ -3,7 +3,7 @@ import { IOrder } from "./interfaces";
 
 export const getOrders = async (token: string) => {
   try {
-    const { data } = await axios.get("http://localhost:3000/orders", {
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/orders`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -18,7 +18,7 @@ export const getOrders = async (token: string) => {
 
 export const getCurrentOrder = async (token: string) => {
   try {
-    const { data } = await axios.get("http://localhost:3000/order/current", {
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/order/current`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -38,7 +38,7 @@ export const addBookToCart = async (
 ) => {
   try {
     const { data } = await axios.post(
-      "http://localhost:3000/cart/create",
+      `${process.env.NEXT_PUBLIC_HOST}/cart/create`,
       {
         bookId,
         quantity,
@@ -65,7 +65,7 @@ export const updateBookInCart = async (
 ) => {
   try {
     const { data } = await axios.put(
-      "http://localhost:3000/cart/update",
+      `${process.env.NEXT_PUBLIC_HOST}/cart/update`,
       {
         cartId,
         bookId,
@@ -91,7 +91,7 @@ export const removeBookFromCart = async (
 ) => {
   try {
     const { data } = await axios.post(
-      "http://localhost:3000/cart/remove",
+      `${process.env.NEXT_PUBLIC_HOST}/cart/remove`,
       {
         cartId,
         bookId,
@@ -117,7 +117,7 @@ export const updateOrder = async (
 ) => {
   try {
     const { data } = await axios.put(
-      "http://localhost:3000/order/update",
+      `${process.env.NEXT_PUBLIC_HOST}/order/update`,
       {
         orderId,
         status,
