@@ -26,14 +26,21 @@ function SearchPage() {
       </Typography>
       <Box
         sx={{
-          display: "flex",
+          display: {
+            md: "flex",
+            xs: "block",
+          },
+
           alignItems: "flex-start",
           justifyContent: "flex-start",
         }}
       >
         <Box
           component={"form"}
-          sx={{ display: "flex", p: 2 }}
+          sx={{
+            display: "flex",
+            p: 2,
+          }}
           onSubmit={handleSearch}
         >
           <TextField
@@ -42,6 +49,12 @@ function SearchPage() {
             variant="outlined"
             onChange={(e) => setSearch(e.target.value)}
             required
+            sx={{
+              width: {
+                md: "auto",
+                xs: "100%",
+              },
+            }}
           />
           <Button
             variant="contained"
@@ -54,7 +67,14 @@ function SearchPage() {
           </Button>
         </Box>
 
-        <Box sx={{ width: "80%" }}>
+        <Box
+          sx={{
+            width: {
+              md: "80%",
+              xs: "100%",
+            },
+          }}
+        >
           {!search && <h1>Search for a book</h1>}
           {search && books.length === 0 && <h1>No book found</h1>}
 
