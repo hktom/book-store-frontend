@@ -17,11 +17,13 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { UserContext } from "@/app/providers";
 import { useContext, useEffect } from "react";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const pages = ["Home"];
 const settings = ["Cart", "Order", "Logout"];
 
 function Header() {
+  const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -36,7 +38,12 @@ function Header() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (page: string) => {
+    if (page === "Home") {
+      router.push("/");
+    } else {
+      router.push(`/${page.toLowerCase()}`);
+    }
     setAnchorElNav(null);
   };
 
@@ -44,7 +51,8 @@ function Header() {
     setAnchorElUser(null);
   };
 
-  const { user, fetchUser } = useContext(UserContext);
+  const { user, fetchUser, fetchCurrentOrder, currentOrder } =
+    useContext(UserContext);
 
   const DisplayUser = () => {
     if (user) {
@@ -61,7 +69,8 @@ function Header() {
               textDecoration: "none",
             }}
           >
-            {user.firstName} {user.lastName} {user.points}
+            {user.firstName} {user.lastName} ${user.points} | Panier :{" "}
+            {currentOrder?.carts.length}
           </Typography>
         </Box>
       );
@@ -73,8 +82,9 @@ function Header() {
     const token = Cookies.get("token");
     if (!user && token) {
       fetchUser(token);
+      fetchCurrentOrder(token);
     }
-  }, [fetchUser, user]);
+  }, [fetchCurrentOrder, fetchUser, user]);
 
   const getMenu = (pages: string[], settings: string[]): string[] => {
     if (user) {
@@ -102,6 +112,7 @@ function Header() {
               color: "inherit",
               textDecoration: "none",
             }}
+            onClick={() => handleCloseNavMenu('Home')}
           >
             Books
           </Typography>
@@ -136,7 +147,7 @@ function Header() {
               }}
             >
               {getMenu(pages, settings).map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -158,14 +169,15 @@ function Header() {
               color: "inherit",
               textDecoration: "none",
             }}
+            onClick={() => handleCloseNavMenu('Home')}
           >
-            LOGO
+            BOOK
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {getMenu(pages, settings).map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => handleCloseNavMenu(page)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}

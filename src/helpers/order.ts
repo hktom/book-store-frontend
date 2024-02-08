@@ -90,7 +90,7 @@ export const removeBookFromCart = async (
   token: string
 ) => {
   try {
-    const { data } = await axios.put(
+    const { data } = await axios.post(
       "http://localhost:3000/cart/remove",
       {
         cartId,

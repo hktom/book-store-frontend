@@ -50,7 +50,7 @@ function BookCard({ title, cover, tags, writer, point, id }: IBook) {
           component="h6"
           sx={{ textAlign: "center" }}
         >
-          {point}
+          ${point}
         </Typography>
       </Box>
     </Box>

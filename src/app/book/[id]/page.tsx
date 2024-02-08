@@ -42,7 +42,7 @@ async function BookPage({ params }: { params: { id: string } }) {
             Author: {book?.writer}
           </Typography>
           <Typography variant="h2" component="h2" gutterBottom sx={{ mt: 1 }}>
-            {book?.point}
+            ${book?.point}
           </Typography>
 
           <OrderItem id={params.id.toString()} />

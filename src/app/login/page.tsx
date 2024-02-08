@@ -13,7 +13,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { user, fetchUser } = useContext(UserContext);
+  const { user, fetchUser, fetchCurrentOrder } = useContext(UserContext);
   const router = useRouter();
 
   const onSubmit = async (e: any) => {
@@ -23,6 +23,7 @@ function Login() {
     if (token) {
       Cookies.set("token", token);
       await fetchUser(token);
+      await await fetchCurrentOrder(token);
       setLoading((prev) => !prev);
       router.push("/");
     } else {

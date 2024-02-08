@@ -15,6 +15,10 @@ export interface ICart {
   total: number;
   book: IBook;
   order: IOrder;
+  bookId: string;
+  bookCover: string;
+  bookTitle: string;
+  unitPrice: number;
 }
 
 export interface IOrder {
