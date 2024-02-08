@@ -19,7 +19,7 @@ import { useContext, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
-const pages = ["Home"];
+const pages = ["Home", "Search"];
 const autPage = ["Login", "Register"];
 const settings = ["Cart", "Order", "Logout"];
 
