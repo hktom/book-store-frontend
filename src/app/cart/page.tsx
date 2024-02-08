@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  getCurrentOrder,
-  removeBookFromCart,
-  updateOrder,
-} from "@/helpers/order";
+import { removeBookFromCart, updateOrder } from "@/helpers/order";
 import { Alert, Box, Button, CardMedia, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../providers";
@@ -19,12 +15,6 @@ function Cart() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  useEffect(() => {
-    if (token && !currentOrder) {
-      fetchCurrentOrder(token);
-    }
-  }, [currentOrder, fetchCurrentOrder, token]);
 
   if (!currentOrder) {
     return <Box>Loading....</Box>;
