@@ -20,6 +20,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 const pages = ["Home"];
+const autPage = ["Login", "Register"];
 const settings = ["Cart", "Order", "Logout"];
 
 function Header() {
@@ -38,13 +39,19 @@ function Header() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = (page: string) => {
+  const handleCloseNavMenu = (page?: string) => {
+    if (!page) {
+      setAnchorElNav(null);
+      return;
+    }
     if (page === "Home") {
       router.push("/");
+    } else if (page === "Logout") {
+      Cookies.remove("token");
+      window.location.href = "/";
     } else {
       router.push(`/${page.toLowerCase()}`);
     }
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -86,11 +93,15 @@ function Header() {
     }
   }, [fetchCurrentOrder, fetchUser, user]);
 
-  const getMenu = (pages: string[], settings: string[]): string[] => {
+  const getMenu = (
+    pages: string[],
+    settings: string[],
+    autPage: string[]
+  ): string[] => {
     if (user) {
       return pages.concat(settings);
     }
-    return pages;
+    return pages.concat(autPage);
   };
 
   return (
@@ -112,7 +123,7 @@ function Header() {
               color: "inherit",
               textDecoration: "none",
             }}
-            onClick={() => handleCloseNavMenu('Home')}
+            onClick={() => handleCloseNavMenu("Home")}
           >
             Books
           </Typography>
@@ -141,12 +152,12 @@ function Header() {
                 horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClose={()=>handleCloseNavMenu()}
               sx={{
                 display: { xs: "block", md: "none" },
               }}
             >
-              {getMenu(pages, settings).map((page) => (
+              {getMenu(pages, settings, autPage).map((page) => (
                 <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
@@ -169,12 +180,12 @@ function Header() {
               color: "inherit",
               textDecoration: "none",
             }}
-            onClick={() => handleCloseNavMenu('Home')}
+            onClick={() => handleCloseNavMenu("Home")}
           >
             BOOK
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {getMenu(pages, settings).map((page) => (
+            {getMenu(pages, settings, autPage).map((page) => (
               <Button
                 key={page}
                 onClick={() => handleCloseNavMenu(page)}
