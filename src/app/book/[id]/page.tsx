@@ -10,7 +10,11 @@ async function BookPage({ params }: { params: { id: string } }) {
       <Box
         sx={{
           mt: 10,
-          display: "flex",
+          p: 4,
+          display: {
+            md: "flex",
+            xs: "block",
+          },
           justifyContent: "flex-start",
           alignItems: "flex-start",
         }}
@@ -20,7 +24,14 @@ async function BookPage({ params }: { params: { id: string } }) {
             component="img"
             image={book?.cover}
             alt={book?.title}
-            sx={{ height: "450px", width: "350px", objectFit: "cover" }}
+            sx={{
+              height: "450px",
+              width: {
+                md: "350px",
+                xs: "100%",
+              },
+              objectFit: "cover",
+            }}
           />
 
           <Typography
@@ -34,7 +45,7 @@ async function BookPage({ params }: { params: { id: string } }) {
         </Box>
 
         <Box sx={{ ml: 10 }}>
-          <Typography variant="h1" component="h1" gutterBottom sx={{ mt: 5 }}>
+          <Typography variant="h2" component="h1" gutterBottom sx={{ mt: 5 }}>
             {book?.title}
           </Typography>
 
